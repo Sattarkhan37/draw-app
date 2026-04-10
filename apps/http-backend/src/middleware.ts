@@ -6,7 +6,7 @@ export function middleware(req: Request, res: Response, next: NextFunction) {
   const token = req.headers["authorization"] ?? "";
   const decoded = jwt.verify(token, JWT_SECRET) as any;
   if (decoded) {
-    (req as any) = decoded.userId;
+    req.userId = decoded.userId;
     next();
   } else {
     res.status(403).json({

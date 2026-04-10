@@ -54,31 +54,45 @@ app.post("/signin", async (req, res) => {
       password: parsedData.data.password,
     },
   });
-  if(!user){
+  if (!user) {
     res.status(403).json({
-      message:"Not athorized"
-    })
+      message: "Not athorized",
+    });
     return;
   }
-  const tocken = jwt.sign(
+  const token = jwt.sign(
     {
       userId: user?.id,
     },
     JWT_SECRET,
   );
-  res.json({ tocken });
+  res.json({ token });
 });
-app.post("/room", middleware, (req, res) => {
-  const data = CreateRoomSchema.safeParse(req.body);
-  if (!data.success) {
+app.post("/room", middleware, async (req, res) => {
+  const parsedData = CreateRoomSchema.safeParse(req.body);
+  if (!parsedData.success) {
     res.json({
       message: "Incorrect input",
     });
     return;
   }
-  res.json({
-    roomId: 123,
-  });
+  const userId = (req as any).userId;
+  try {
+    const room = await prismaClient.room.create({
+      data: {
+        slug: parsedData.data.name,
+        adminId: userId,
+      },
+    });
+    res.json({
+      roomId: room.id,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(411).json({
+      message: "room already exists",
+    });
+  }
 });
 
 app.listen(port, () => {
