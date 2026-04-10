@@ -10,26 +10,29 @@ import {
 import { prismaClient } from "@repo/db/client";
 const app = express();
 const port = 3006;
+app.use(express.json());
 
 app.post("/signup", async (req, res) => {
   //db call
   const parsedData = CreateUserSchema.safeParse(req.body);
   if (!parsedData.success) {
+    console.log(parsedData.error);
+
     res.json({
       message: "Incorrect input",
     });
     return;
   }
   try {
-    await prismaClient.user.create({
+    const user = await prismaClient.user.create({
       data: {
-        email: parsedData.data?.userName,
+        email: parsedData.data?.username,
         password: parsedData.data.password,
         name: parsedData.data.name,
       },
     });
     res.json({
-      userId: 123,
+      userId: user.id,
     });
   } catch (e) {
     res.status(411).json({
