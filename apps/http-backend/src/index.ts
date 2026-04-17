@@ -9,7 +9,7 @@ import {
 } from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
 const app = express();
-const port = 3006;
+const port = 3008;
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
@@ -90,7 +90,7 @@ app.post("/room", middleware, async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(411).json({
-      message: "room already exists",
+      message: "room already exists with this name",
     });
   }
 });
