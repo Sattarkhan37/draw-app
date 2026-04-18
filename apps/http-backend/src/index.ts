@@ -96,7 +96,7 @@ app.post("/room", middleware, async (req, res) => {
 });
 app.get("/chats/:roomId", async (req, res) => {
   const roomId = Number(req.params.roomId);
-  const message = await prismaClient.chat.findMany({
+  const messages = await prismaClient.chat.findMany({
     where: {
       roomId: roomId,
     },
@@ -106,7 +106,7 @@ app.get("/chats/:roomId", async (req, res) => {
     take: 50,
   });
   res.json({
-    message,
+    messages,
   });
 });
 app.get("/room/:slug", async (req, res) => {
