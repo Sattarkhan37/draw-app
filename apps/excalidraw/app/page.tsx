@@ -5,20 +5,22 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-black text-black dark:text-white">
-
       {/* Navbar */}
       <header className="flex justify-between items-center px-8 py-4 border-b border-zinc-200 dark:border-zinc-800">
         <h1 className="text-xl font-bold">MindBoard</h1>
 
         <div className="flex gap-4">
-          <Link href="/signin" className="text-sm">
-            Login
-          </Link>
           <Link
-            href="/canvas"
+            href="/signin"
             className="px-4 py-2 bg-black text-white rounded-md dark:bg-white dark:text-black text-sm"
           >
-            Open Board
+            Sign in
+          </Link>
+          <Link
+            href="/signup"
+            className="px-4 py-2 bg-black text-white rounded-md dark:bg-white dark:text-black text-sm"
+          >
+            Get Started
           </Link>
         </div>
       </header>
@@ -30,8 +32,9 @@ export default function Home() {
         </h2>
 
         <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mb-8">
-          A smart whiteboard for taking notes, sketching ideas, and collaborating
-          in real-time. Combine writing and drawing in one seamless workspace.
+          A smart whiteboard for taking notes, sketching ideas, and
+          collaborating in real-time. Combine writing and drawing in one
+          seamless workspace.
         </p>
 
         <div className="flex gap-4">
@@ -56,7 +59,8 @@ export default function Home() {
         <div className="p-6 border rounded-xl dark:border-zinc-800">
           <h3 className="text-xl font-semibold mb-2">Smart Drawing</h3>
           <p className="text-zinc-600 dark:text-zinc-400">
-            Draw shapes, diagrams, and sketches effortlessly with intuitive tools.
+            Draw shapes, diagrams, and sketches effortlessly with intuitive
+            tools.
           </p>
         </div>
 
@@ -68,7 +72,9 @@ export default function Home() {
         </div>
 
         <div className="p-6 border rounded-xl dark:border-zinc-800">
-          <h3 className="text-xl font-semibold mb-2">Real-time Collaboration</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            Real-time Collaboration
+          </h3>
           <p className="text-zinc-600 dark:text-zinc-400">
             Work together live with teammates using shared whiteboard sessions.
           </p>
