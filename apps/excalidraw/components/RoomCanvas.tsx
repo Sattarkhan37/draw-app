@@ -11,6 +11,12 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
     const ws = new WebSocket(WS_URL);
     ws.onopen = () => {
       setSocket(ws);
+      ws.send(
+        JSON.stringify({
+          type: "join_room",
+          roomId,
+        }),
+      );
     };
   }, []);
   if (!socket) {
@@ -18,7 +24,7 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
   }
   return (
     <>
-      <Canvas roomId={roomId} />
+      <Canvas roomId={roomId} socket={socket} />
     </>
   );
 }

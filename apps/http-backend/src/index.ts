@@ -2,6 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common/config";
 import { middleware } from "./middleware";
+import cors from "cors";
 import {
   CreateUserSchema,
   SigninSchema,
@@ -11,7 +12,7 @@ import { prismaClient } from "@repo/db/client";
 const app = express();
 const port = 3008;
 app.use(express.json());
-
+app.use(cors());
 app.post("/signup", async (req, res) => {
   //db call
   const parsedData = CreateUserSchema.safeParse(req.body);
@@ -95,7 +96,10 @@ app.post("/room", middleware, async (req, res) => {
   }
 });
 app.get("/chats/:roomId", async (req, res) => {
+  console.log("PARAMS:", req.params);
+  console.log("roomId raw:", req.params.roomId);
   const roomId = Number(req.params.roomId);
+  console.log("roomId parsed:", roomId);
   const messages = await prismaClient.chat.findMany({
     where: {
       roomId: roomId,
