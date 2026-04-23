@@ -5,7 +5,7 @@ export function Canvas({ roomId }: { roomId: string }) {
   const canvasref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (canvasref.current) {
-      initDraw(canvasref.current, roomId);
+      initDraw(canvasref.current, roomId,socket);
     }
   }, [canvasref]);
   return (

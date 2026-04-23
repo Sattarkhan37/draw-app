@@ -1,7 +1,7 @@
 import { HTTP_BACKEND } from "@/config";
 import axios from "axios";
 
-type shape =
+type Shape =
   | {
       type: "rect";
       x: number;
@@ -15,13 +15,25 @@ type shape =
       centerY: number;
       radius: number;
     };
-export async function initDraw(canvas: HTMLCanvasElement, roomId: string) {
+export async function initDraw(
+  canvas: HTMLCanvasElement,
+  roomId: string,
+  socket: WebSocket,
+) {
   const ctx = canvas.getContext("2d");
 
-  let existingShapes: shape[] = await getExistingShapes(roomId);
+  let existingShapes: Shape[] = await getExistingShapes(roomId);
   if (!ctx) {
     return;
   }
+  socket.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    if (message.type == "chat") {
+      const parsedShape = JSON.parse(message.message);
+      existingShapes.push(parsedShape);
+      clearCanvas(existingShapes, canvas, ctx);
+    }
+  };
   clearCanvas(existingShapes, canvas, ctx);
   let clicked = false;
   let startX = 0;
@@ -44,13 +56,13 @@ export async function initDraw(canvas: HTMLCanvasElement, roomId: string) {
     const pos = getMousePos(e);
     const width = pos.x - startX;
     const height = pos.y - startY;
-    existingShapes.push({
-      type: "rect",
-      x: startX,
-      y: startY,
-      height,
-      width,
-    });
+    const shape: Shape = { type: "rect", x: startX, y: startY, height, width };
+    existingShapes.push(shape);
+    socket.send(
+      JSON.stringify({
+        shape,
+      }),
+    );
   });
   canvas.addEventListener("mousemove", (e) => {
     if (clicked) {
@@ -65,7 +77,7 @@ export async function initDraw(canvas: HTMLCanvasElement, roomId: string) {
 }
 
 function clearCanvas(
-  existingShapes: shape[],
+  existingShapes: Shape[],
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
 ) {
